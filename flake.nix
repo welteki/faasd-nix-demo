@@ -49,12 +49,26 @@
         ];
       };
 
-      devShell.${system} = pkgs.mkShell {
-        buildInputs = [
-          pkgs.faas-cli
-          pkgs.nixpkgs-fmt
-          pkgs.rnix-lsp
+      nixosConfigurations.faasd-vm = inputs.nixos-shell.lib.nixosShellSystem {
+        inherit system;
+        modules = [
+          (args: {
+            nixos-shell.mounts.mountHome = false;
+            virtualisation.memorySize = 1024;
+          })
         ];
       };
+
+      devShell.${system} =
+        let
+          nixos-shell = inputs.nixos-shell.defaultPackage.${system};
+        in
+        pkgs.mkShell {
+          buildInputs = [
+            nixos-shell
+            pkgs.nixpkgs-fmt
+            pkgs.rnix-lsp
+          ];
+        };
     };
 }
