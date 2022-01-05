@@ -6,8 +6,11 @@
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
     welteki-nix.url = "github:welteki/welteki.nix";
+
     nixos-shell.url = "github:welteki/nixos-shell/improve-flake-support";
     nixos-shell.inputs.nixpkgs.follows = "nixpkgs";
+
+    faasd.url = "github:welteki/faasd-nix";
   };
 
   outputs = { self, nixpkgs, welteki-nix, ... }@inputs:
@@ -51,7 +54,10 @@
 
       nixosConfigurations.faasd-vm = inputs.nixos-shell.lib.nixosShellSystem {
         inherit system;
+        specialArgs = { inherit inputs; };
         modules = [
+          ./faasd-module.nix
+
           (args: {
             nixos-shell.mounts.mountHome = false;
             virtualisation.memorySize = 1024;
@@ -66,6 +72,7 @@
         pkgs.mkShell {
           buildInputs = [
             nixos-shell
+            pkgs.faas-cli
             pkgs.nixpkgs-fmt
             pkgs.rnix-lsp
           ];
