@@ -17,9 +17,7 @@
           { address = "fe80::a87c:bcff:fe8b:1b92"; prefixLength = 64; }
         ];
         ipv4.routes = [{ address = "207.154.224.1"; prefixLength = 32; }];
-        ipv6.routes = [{ address = ""; prefixLength = 128; }];
       };
-
     };
   };
   services.udev.extraRules = ''
